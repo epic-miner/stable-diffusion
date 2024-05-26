@@ -4,7 +4,7 @@
 deactivate_conda_environment() {
     local CURRENT_ENV=$(conda info --envs | grep '*' | awk '{print $1}')
     if [ ! -z "$CURRENT_ENV" ]; then
-        deactivate
+        conda deactivate
     fi
 }
 
@@ -22,14 +22,17 @@ CONDA_DIR=$(dirname "$CONDA_PATH")
 # Deactivate any active Conda environment
 deactivate_conda_environment
 
+# Initialize Conda (necessary for proper activation)
+eval "$("$CONDA_DIR/conda" shell.bash hook)"
+
 # Activate base environment
-source "$CONDA_DIR/activate" base
+conda activate base
 
 # Update Conda
-"$CONDA_PATH" update -y conda
+conda update -y conda
 
 # Update all packages
-"$CONDA_PATH" update -y --all
+conda update -y --all
 
 # Deactivate environment
-deactivate
+conda deactivate
